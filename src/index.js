@@ -17,24 +17,36 @@ window.Webflow.push(() => {
     touchMultiplier: 1.5,
   });
 
+  // Lenis scroll to anchor
+  const lenisAnchors = function () {
+    // Grab all elements that have a "scroll-target" attribute
+    const scrollButtons = document.querySelectorAll('[scroll-target]');
+    // For each element, listen to a "click" event
+    scrollButtons.forEach((button) => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        // get the DOM element by the ID (scroll-target value)
+        let target = button.getAttribute('scroll-target'),
+          el = document.getElementById(target);
+
+        // Use lenis.scrollTo() to scroll the page to the right element
+        lenis.scrollTo(el, {
+          offset: 0,
+          immediate: false,
+          duration: 1,
+          easing: (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2), // https://easings.net
+        });
+      });
+    });
+  };
+  lenisAnchors();
+
   function raf(time) {
     lenis.raf(time);
     requestAnimationFrame(raf);
   }
   requestAnimationFrame(raf);
-
-  // allow scrolling on overflow elements
-  //document.querySelector('.over--scroll').setAttribute("onwheel", "event.stopPropagation()");
-
-  //CURSOR CODE
-  //Cursor .is-cursor-minor attribute
-  // $("[cursor=minor]").on('mouseenter mouseleave', function() {
-  //   $('.cursor_inner').toggleClass('is-cursor-minor');
-  //   $('.cursor_outer').toggleClass('is-cursor-minor');
-  // });
-
-  //RANDOM INTERACTIONS CODE
-  //Button .is-hovered added to button circle
 
   // Keep lenis and scrolltrigger in sync
   lenis.on('scroll', () => {
@@ -42,23 +54,21 @@ window.Webflow.push(() => {
     ScrollTrigger.update();
   });
 
-  // Split the text up
-  function splitText() {
-    let testimonialSplitInstance = new SplitType('.testimonial_quote', {
-      types: 'lines',
-    });
-  }
   // button interaction
   const buttonHover = function () {
     const buttons = document.querySelectorAll('.button_link');
+    const bg = document.querySelector('.cta_bg');
+
     const ACTIVE_CLASS = 'is-hovered';
     buttons.forEach((button) => {
       button.addEventListener('mouseenter', function () {
         button.classList.add(ACTIVE_CLASS);
+        bg.classList.add(ACTIVE_CLASS);
         button.querySelector('.button_circle').classList.add(ACTIVE_CLASS);
       });
       button.addEventListener('mouseleave', function () {
         button.classList.remove(ACTIVE_CLASS);
+        bg.classList.remove(ACTIVE_CLASS);
         button.querySelector('.button_circle').classList.remove(ACTIVE_CLASS);
       });
     });
@@ -91,26 +101,6 @@ window.Webflow.push(() => {
     }
   });
 
-  function firstUpScroll() {
-    $('.first-up_paragraph .line').each(function (index) {
-      let tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: $(this),
-          // trigger element - viewport
-          start: 'top 90%',
-          end: 'bottom 70%',
-          scrub: 0.5,
-        },
-      });
-      tl.from($(this), {
-        opacity: 0,
-        duration: 1,
-      });
-    });
-  }
-
-  firstUpScroll();
-
   let mm = gsap.matchMedia();
   mm.add(
     {
@@ -141,7 +131,7 @@ window.Webflow.push(() => {
           {
             yPercent: -100,
             opacity: 0,
-            rotateX: 45,
+            rotateX: 90,
           },
           '<.3'
         );
@@ -150,7 +140,7 @@ window.Webflow.push(() => {
           {
             yPercent: 100,
             opacity: 0,
-            rotateX: -45,
+            rotateX: -90,
           },
           '<.3'
         );
@@ -167,7 +157,7 @@ window.Webflow.push(() => {
           {
             yPercent: 25,
             opacity: 0,
-            rotateX: 45,
+            rotateX: 90,
             stagger: { each: isAnimationSafe ? 0.1 : 0, from: 'left' },
             duration: 0.8,
           },
@@ -209,15 +199,15 @@ window.Webflow.push(() => {
           }
           // animate element
           Flip.from(state, {
-            duration: moveToHero ? 0.4 : 0.8,
-            ease: 'power2.out',
+            duration: moveToHero ? 0.3 : 0.8,
+            ease: moveToHero ? 'power1.in' : 'power2.out',
           });
         };
         let tlFLip = gsap.timeline({
           scrollTrigger: {
             trigger: '.section_hero',
-            start: 'bottom 90%',
-            end: 'bottom 91%',
+            start: 'bottom 95%',
+            end: 'bottom 96%',
             scrub: false,
             onEnter: () => {
               console.log('onEnter');
@@ -233,9 +223,9 @@ window.Webflow.push(() => {
         let tl = gsap.timeline({
           scrollTrigger: {
             trigger: '.section_hero',
-            start: 'bottom 90%',
-            end: 'bottom 0%',
-            scrub: 1,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 0.7,
           },
           defaults: {
             duration: 1,
@@ -245,9 +235,19 @@ window.Webflow.push(() => {
         tl.to('.hero_text-wrapper', {
           yPercent: 80,
         });
+        tl.to(
+          '.hero_spinner-wrap',
+          {
+            rotateZ: 360,
+          },
+          '<'
+        );
       }
       function firstUpTitle() {
         // set up timeline
+        let headingSplit = new SplitType('.first-up_h2', {
+          types: 'lines, words',
+        });
         let tl = gsap.timeline({
           scrollTrigger: {
             trigger: '.first-up_h2',
@@ -260,16 +260,141 @@ window.Webflow.push(() => {
             ease: 'power3.out',
           },
         });
-        tl.from('.first-up_h2 .char', {
-          xPercent: -50,
+        tl.from('.first-up_h2 .line', {
+          x: '-3rem',
+          skew: '-5',
           opacity: 0,
           stagger: { each: 0.2, from: 'left' },
         });
       }
-
+      function firstUpScroll() {
+        $('.first-up_paragraph .line').each(function (index) {
+          let tl = gsap.timeline({
+            scrollTrigger: {
+              trigger: $(this),
+              // trigger element - viewport
+              start: 'top 90%',
+              end: 'bottom 70%',
+              scrub: 0.5,
+            },
+          });
+          tl.from($(this), {
+            opacity: 0,
+            duration: 1,
+          });
+        });
+      }
+      function firstUpImage() {
+        // set up timeline
+        let tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: '.section_first-up',
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 0.5,
+          },
+          defaults: {
+            duration: 1,
+            ease: 'none',
+          },
+        });
+        tl.to('.first-up_image', {
+          scale: 1.1,
+          yPercent: -15,
+        });
+      }
+      function whyMeScroll() {
+        let tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: '.why_list',
+            start: 'bottom bottom',
+            end: 'bottom 85%',
+            markers: false,
+            scrub: true,
+          },
+          defaults: {
+            duration: 1,
+            ease: 'none',
+          },
+        });
+        tl.to('.why_item-final', {
+          height: '100%',
+        });
+      }
+      function myWork() {
+        const trigger = document.querySelector('.work_link');
+        let headingSplit = new SplitType('.work_h2', {
+          types: 'words, chars',
+        });
+        // set up timeline
+        let tl = gsap.timeline({
+          paused: true,
+          defaults: {
+            duration: 0.6,
+            ease: 'power2.out',
+          },
+        });
+        tl.to(
+          '.work_image',
+          {
+            scale: 1.2,
+            duration: 0.8,
+          },
+          '<'
+        );
+        tl.to(
+          '.work_arrow',
+          {
+            xPercent: 50,
+          },
+          '<'
+        );
+        tl.fromTo(
+          '.work_h2.is-1 .char',
+          {
+            yPercent: 0,
+            opacity: 1,
+            rotateX: 0,
+          },
+          {
+            yPercent: -75,
+            opacity: 0,
+            rotateX: 90,
+            duration: 0.4,
+            stagger: { each: 0.03, from: 'left' },
+          },
+          '<'
+        );
+        tl.fromTo(
+          '.work_h2.is-2 .char',
+          {
+            yPercent: 75,
+            opacity: 0,
+            rotateX: -90,
+          },
+          {
+            yPercent: 0,
+            opacity: 1,
+            rotateX: 0,
+            duration: 0.4,
+            stagger: { each: 0.03, from: 'left' },
+          },
+          '<.2'
+        );
+        trigger.addEventListener('mouseenter', function () {
+          tl.play();
+        });
+        trigger.addEventListener('mouseleave', function () {
+          tl.reverse();
+        });
+      }
       heroLoad();
       heroScroll();
       firstUpTitle();
+      firstUpScroll();
+      firstUpImage();
+      whyMeScroll();
+      myWork();
       // Conditional Animations
       if (isAnimationSafe) {
       }
