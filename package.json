@@ -20,5 +20,8 @@
     "esbuild": "^0.15.18",
     "prettier": "2.8.1",
     "serve": "^14.1.2"
+  },
+  "dependencies": {
+    "split-type": "^0.3.3"
   }
 }
