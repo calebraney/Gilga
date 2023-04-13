@@ -1,0 +1,24 @@
+{
+  "name": "starter",
+  "version": "1.0.4",
+  "description": "Developer starter template for Caleb Raney projects.",
+  "homepage": "https://github.com/calebraney/Test-Starter#readme",
+  "license": "ISC",
+  "keywords": [],
+  "author": {
+    "name": "Caleb Raney",
+    "url": "https://www.calebraney.com/"
+  },
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "serve": "serve",
+    "build": "node ./bin/build.js",
+    "build-old": "esbuild src/index.js --bundle --outfile=dist/index.js --watch"
+  },
+  "devDependencies": {
+    "esbuild": "^0.15.18",
+    "prettier": "2.8.1",
+    "serve": "^14.1.2"
+  }
+}
