@@ -57,18 +57,24 @@ window.Webflow.push(() => {
   // button interaction
   const buttonHover = function () {
     const buttons = document.querySelectorAll('.button_link');
-    const bg = document.querySelector('.cta_bg');
+    const bgOne = document.querySelector('.cta_bg');
+    const bgTwo = document.querySelector('.cta_bg');
 
     const ACTIVE_CLASS = 'is-hovered';
     buttons.forEach((button) => {
       button.addEventListener('mouseenter', function () {
         button.classList.add(ACTIVE_CLASS);
-        bg.classList.add(ACTIVE_CLASS);
         button.querySelector('.button_circle').classList.add(ACTIVE_CLASS);
+        if (button.classList.contains('is-black')) {
+          bgOne.classList.add(ACTIVE_CLASS);
+        } else {
+          bgTwo.classList.add(ACTIVE_CLASS);
+        }
       });
       button.addEventListener('mouseleave', function () {
         button.classList.remove(ACTIVE_CLASS);
-        bg.classList.remove(ACTIVE_CLASS);
+        bgOne.classList.remove(ACTIVE_CLASS);
+        bgTwo.classList.remove(ACTIVE_CLASS);
         button.querySelector('.button_circle').classList.remove(ACTIVE_CLASS);
       });
     });
@@ -112,7 +118,7 @@ window.Webflow.push(() => {
     (context) => {
       let { isAnimationSafe, isDesktop, isMobile } = context.conditions;
       //Page Load Animation
-      function heroLoad() {
+      const heroLoad = function () {
         let headingSplit = new SplitType('.hero_h1', {
           types: 'words, chars',
         });
@@ -178,9 +184,9 @@ window.Webflow.push(() => {
           },
           '<.4'
         );
-      }
+      };
 
-      function heroLogoScroll() {
+      const heroLogoScroll = function () {
         const updateLogo = function (moveToHero = false) {
           const logoWrap = document.querySelector('.hero_logo-layout');
           const logoChildren = logoWrap.querySelectorAll('*');
@@ -219,8 +225,8 @@ window.Webflow.push(() => {
             },
           },
         });
-      }
-      function heroTextScroll() {
+      };
+      const heroTextScroll = function () {
         // set up timeline
         let tl = gsap.timeline({
           scrollTrigger: {
@@ -244,8 +250,8 @@ window.Webflow.push(() => {
           },
           '<'
         );
-      }
-      function firstUpTitle() {
+      };
+      const firstUpTitle = function () {
         // set up timeline
         let headingSplit = new SplitType('.first-up_h2', {
           types: 'lines, words',
@@ -268,8 +274,8 @@ window.Webflow.push(() => {
           opacity: 0,
           stagger: { each: 0.2, from: 'left' },
         });
-      }
-      function firstUpScroll() {
+      };
+      const firstUpScroll = function () {
         $('.first-up_paragraph .line').each(function (index) {
           let tl = gsap.timeline({
             scrollTrigger: {
@@ -285,8 +291,8 @@ window.Webflow.push(() => {
             duration: 1,
           });
         });
-      }
-      function firstUpImage() {
+      };
+      const firstUpImage = function () {
         // set up timeline
         let tl = gsap.timeline({
           scrollTrigger: {
@@ -304,8 +310,8 @@ window.Webflow.push(() => {
           scale: 1.1,
           yPercent: -15,
         });
-      }
-      function whyMeScroll() {
+      };
+      const whyMeScroll = function () {
         let tl = gsap.timeline({
           scrollTrigger: {
             trigger: '.why_list',
@@ -322,8 +328,8 @@ window.Webflow.push(() => {
         tl.to('.why_item-final', {
           height: '100%',
         });
-      }
-      function myWork() {
+      };
+      const myWorkHover = function () {
         const trigger = document.querySelector('.work_link');
         let headingSplit = new SplitType('.work_h2', {
           types: 'words, chars',
@@ -389,7 +395,7 @@ window.Webflow.push(() => {
         trigger.addEventListener('mouseleave', function () {
           tl.reverse();
         });
-      }
+      };
       heroLoad();
       heroTextScroll();
       firstUpTitle();
@@ -399,7 +405,7 @@ window.Webflow.push(() => {
       if (isAnimationSafe && isDesktop) {
         heroLogoScroll();
         whyMeScroll();
-        myWork();
+        myWorkHover();
       }
     }
   );
