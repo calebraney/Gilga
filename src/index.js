@@ -61,13 +61,14 @@ window.Webflow.push(() => {
     const bgTwo = document.querySelector('.cta_bg.is-2');
 
     const ACTIVE_CLASS = 'is-hovered';
-    buttons.forEach((button) => {
+    buttons.forEach((button, index) => {
       button.addEventListener('mouseenter', function () {
         button.classList.add(ACTIVE_CLASS);
         button.querySelector('.button_circle').classList.add(ACTIVE_CLASS);
-        if (button.classList.contains('is-black')) {
+        if (index === 0) {
           bgOne.classList.add(ACTIVE_CLASS);
-        } else {
+        }
+        if (index === 1) {
           bgTwo.classList.add(ACTIVE_CLASS);
         }
       });
