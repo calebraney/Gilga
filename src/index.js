@@ -180,7 +180,7 @@ window.Webflow.push(() => {
         );
       }
 
-      function heroScroll() {
+      function heroLogoScroll() {
         const updateLogo = function (moveToHero = false) {
           const logoWrap = document.querySelector('.hero_logo-layout');
           const logoChildren = logoWrap.querySelectorAll('*');
@@ -203,7 +203,7 @@ window.Webflow.push(() => {
             ease: moveToHero ? 'power1.in' : 'power2.out',
           });
         };
-        let tlFLip = gsap.timeline({
+        let tl = gsap.timeline({
           scrollTrigger: {
             trigger: '.section_hero',
             start: 'bottom 95%',
@@ -219,6 +219,8 @@ window.Webflow.push(() => {
             },
           },
         });
+      }
+      function heroTextScroll() {
         // set up timeline
         let tl = gsap.timeline({
           scrollTrigger: {
@@ -389,14 +391,15 @@ window.Webflow.push(() => {
         });
       }
       heroLoad();
-      heroScroll();
+      heroTextScroll();
       firstUpTitle();
       firstUpScroll();
       firstUpImage();
-      whyMeScroll();
-      myWork();
       // Conditional Animations
-      if (isAnimationSafe) {
+      if (isAnimationSafe && isDesktop) {
+        heroLogoScroll();
+        whyMeScroll();
+        myWork();
       }
     }
   );
