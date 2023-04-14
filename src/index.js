@@ -57,8 +57,8 @@ window.Webflow.push(() => {
   // button interaction
   const buttonHover = function () {
     const buttons = document.querySelectorAll('.button_link');
-    const bgOne = document.querySelector('.cta_bg');
-    const bgTwo = document.querySelector('.cta_bg');
+    const bgOne = document.querySelector('.cta_bg.is-1');
+    const bgTwo = document.querySelector('.cta_bg.is-2');
 
     const ACTIVE_CLASS = 'is-hovered';
     buttons.forEach((button) => {
